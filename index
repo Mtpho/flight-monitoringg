@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282828;
+            color: white;
+            text-align: center;
+        }
+        .data-container {
+            margin-top: 30px;
+        }
+        .data-item {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+        .refresh-button {
+            background-color: #1DBA54;
+            color: black;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .refresh-button:hover {
+            background-color: #158F3B;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flight Monitoring System</h1>
+    <div class="data-container">
+        <div class="data-item" id="altitude">Altitude: Loading...</div>
+        <div class="data-item" id="speed">Speed: Loading...</div>
+        <div class="data-item" id="acceleration">Acceleration: Loading...</div>
+        <div class="data-item" id="pressure">Pressure: Loading...</div>
+        <div class="data-item" id="temperature">Temperature: Loading...</div>
+        <div class="data-item" id="free_fall">Free Fall: Loading...</div>
+        <div class="data-item" id="latitude">Latitude: Loading...</div>
+        <div class="data-item" id="longitude">Longitude: Loading...</div>
+        <div class="data-item" id="time">Time: Loading...</div>
+        <div class="data-item" id="num_satellites">Number of Satellites: Loading...</div>
+    </div>
+    <button class="refresh-button" onclick="fetchSensorData()">Refresh Data</button>
+
+    <script>
+        // Function to fetch sensor data from the server
+        function fetchSensorData() {
+            $.get('/get_sensor_data', function(data) {
+                $('#altitude').text('Altitude: ' + data.altitude + ' m');
+                $('#speed').text('Speed: ' + data.speed.toFixed(2) + ' m/s');
+                $('#acceleration').text('Acceleration: ' + data.acceleration.toFixed(2) + ' m/s²');
+                $('#pressure').text('Pressure: ' + data.pressure + ' Pa');
+                $('#temperature').text('Temperature: ' + data.temperature.toFixed(2) + ' °C');
+                $('#free_fall').text('Free Fall: ' + (data.free_fall ? 'Yes' : 'No'));
+                $('#latitude').text('Latitude: ' + data.latitude.toFixed(2) + '°');
+                $('#longitude').text('Longitude: ' + data.longitude.toFixed(2) + '°');
+                $('#time').text('Time: ' + data.time);
+                $('#num_satellites').text('Number of Satellites: ' + data.num_satellites);
+            });
+        }
+
+        // Automatically refresh data every 5 seconds
+        setInterval(fetchSensorData, 5000);
+    </script>
+</body>
+</html>
